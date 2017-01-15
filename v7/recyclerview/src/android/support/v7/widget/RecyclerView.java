@@ -11983,6 +11983,11 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
                 }
             }
         }
+
+        @Override
+        public void onAnimationStarted(ViewHolder item) {
+            //do nothing
+        }
     }
 
     /**
@@ -12152,7 +12157,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
          *
          * @param listener The listener that must be called.
          */
-        void setListener(ItemAnimatorListener listener) {
+        protected void setListener(ItemAnimatorListener listener) {
             mListener = listener;
         }
 
@@ -12518,6 +12523,9 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
          */
         public void dispatchAnimationStarted(ViewHolder viewHolder) {
             onAnimationStarted(viewHolder);
+            if (mListener != null) {
+                mListener.onAnimationStarted(viewHolder);
+            }
         }
 
         /**
@@ -12547,7 +12555,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
          * equivalent to calling {@link #isRunning()}.
          * @return true if there are any item animations currently running, false otherwise.
          */
-        public final boolean isRunning(ItemAnimatorFinishedListener listener) {
+        public boolean isRunning(ItemAnimatorFinishedListener listener) {
             boolean running = isRunning();
             if (listener != null) {
                 if (!running) {
@@ -12641,11 +12649,11 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
 
         /**
          * The interface to be implemented by listeners to animation events from this
-         * ItemAnimator. This is used internally and is not intended for developers to
-         * create directly.
+         * ItemAnimator.
          */
-        interface ItemAnimatorListener {
+        protected interface ItemAnimatorListener {
             void onAnimationFinished(ViewHolder item);
+            void onAnimationStarted(ViewHolder item);
         }
 
         /**
